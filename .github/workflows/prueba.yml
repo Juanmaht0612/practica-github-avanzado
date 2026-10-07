@@ -11,6 +11,8 @@ jobs:
         env:
           DEV_TOKEN_SECRET: ${{ secrets.DEV_TOKEN }}
         run: |
+          echo "Valor en Secret: [$DEV_TOKEN_SECRET]"
+          echo "Valor Local: [$LOCAL_DEV_TOKEN]"
           if [ "$DEV_TOKEN_SECRET" = "$LOCAL_DEV_TOKEN" ]; then
             echo "Los tokens coinciden correctamente."
             exit 0
