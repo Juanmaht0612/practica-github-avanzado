@@ -13,6 +13,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Añadir línea de nueva feature al README
+        shell: bash
         run: |
           echo "- Nueva feature añadida" >> README.md
           git config user.name "github-actions[bot]"
