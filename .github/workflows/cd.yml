@@ -1,0 +1,35 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Incrementar versión en README (AppVersion)
+        run: |
+          sed -i 's/AppVersion-0/AppVersion-1/g' README.md
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: incrementar AppVersion en README [skip ci]" || exit 0
+          git push
+
+      - name: Validar token de producción
+        shell: bash
+        env:
+          PROD_TOKEN_SECRET: ${{ secrets.PROD_TOKEN }}
+        run: |
+          if [ "$PROD_TOKEN_SECRET" = "$LOCAL_PROD_TOKEN" ]; then
+            echo "PROD_TOKEN coincide correctamente."
+            exit 0
+          else
+            echo "ERROR: PROD_TOKEN NO coincide."
+            exit 1
+          fi
